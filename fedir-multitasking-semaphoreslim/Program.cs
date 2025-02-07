@@ -4,16 +4,12 @@ int putCarsCount = 100;
 int popCarsCount = 100;
 int iteration = 0;
 StorageCounter storage = new StorageCounter();
-SemaphoreSlim semaphore = new SemaphoreSlim(1, 2);
+SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
 List<Task> cars = new List<Task>(putCarsCount + popCarsCount);
-
-semaphore.Wait();
 
 FillCarsTaskListRandomly(cars, putCarsCount, popCarsCount);
 
 Console.WriteLine($"Cars count = {cars.Count}");
-
-semaphore.Release();
 
 await Task.WhenAll(cars);
 
@@ -55,6 +51,8 @@ async Task CarEntered(bool isIncrement)
             storage.ItemsCount++;
         else
             storage.ItemsCount--;
+
+        await Task.Delay(50);
     }
     finally
     {
