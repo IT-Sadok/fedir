@@ -1,10 +1,8 @@
-﻿using booking_imitation_n_layer.BussinesLogic.Models;
+﻿using AutoMapper;
+using booking_imitation_n_layer.BussinesLogic.Models.Domain;
+using booking_imitation_n_layer.BussinesLogic.Models.DTO;
 using booking_imitation_n_layer.DataLayer;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace booking_imitation_n_layer.BussinesLogic.Services
 {
@@ -12,10 +10,12 @@ namespace booking_imitation_n_layer.BussinesLogic.Services
     {
 
         private readonly IRoomRepository _roomRepository;
+        private readonly IMapper _mapper;
 
-        public RoomService(IRoomRepository roomRepository)
+        public RoomService(IRoomRepository roomRepository, IMapper mapper)
         {
             _roomRepository = roomRepository;
+            _mapper = mapper;
         }
 
         public async Task<bool> BookRoomAsync(int roomId, DateOnly date)
@@ -28,11 +28,39 @@ namespace booking_imitation_n_layer.BussinesLogic.Services
             return true;
         }
 
-        public async Task<List<Room>> GetAvailableRoomsAsync()
+        public async Task<List<RoomDTO>> GetAvailableRoomsAsync(DateOnly? date)
         {
-            DateOnly today = new DateOnly(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
+            if (date is null)
+            {
+                date = new DateOnly(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
+            }
             var rooms = await _roomRepository.GetAllAsync();
-            return rooms.Where(r => !r.BookedDates.Contains(today)).ToList();
+            var result = _mapper.Map<List<Room>, List<RoomDTO>>(rooms).Where(r => !r.BookedDates.Contains(date.Value)).ToList();
+            return result;
+        }
+
+        public async Task<RoomDTO> GetRoomAsync(int id)
+        {
+            var rooms = await _roomRepository.GetAllAsync();
+            return _mapper.Map<List<Room>, List<RoomDTO>>(rooms).First(r => r.Id == id);
+        }
+
+        public async Task<bool> AddRoomAsync(RoomDTO room)
+        {
+            var result = await _roomRepository.AddRoomAsync(_mapper.Map<RoomDTO, Room>(room));
+            return result;
+        }
+
+        public async Task<bool> SaveRoomAsync(RoomDTO room)
+        {
+            var result = await _roomRepository.SaveRoomAsync(_mapper.Map<RoomDTO, Room>(room));
+            return result;
+        }
+
+        public async Task<bool> RemoveRoomAsync(int id)
+        {
+            var result = await _roomRepository.RemoveRoomAsync(id);
+            return result;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using booking_imitation_n_layer.BussinesLogic.Services;
+﻿using booking_imitation_n_layer.BussinesLogic.Models.DTO;
+using booking_imitation_n_layer.BussinesLogic.Services;
 using booking_imitation_n_layer.DataLayer;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,10 @@ namespace booking_imitation_n_layer.Presentation
             while (choosenMode != ConsoleKey.A || choosenMode != ConsoleKey.U)
             {
                 Console.Clear();
-                Console.WriteLine("Choose mode: \nU key for user mode\nA key for admin mode");
+                Console.WriteLine("Choose mode: " +
+                    "\nU key for user mode" +
+                    "\nA key for admin mode" +
+                    "\nEsc - Exit");
                 choosenMode = Console.ReadKey().Key;
 
                 switch (choosenMode)
@@ -51,29 +55,36 @@ namespace booking_imitation_n_layer.Presentation
                 Console.WriteLine("1. Show all Rooms");
                 Console.WriteLine("2. Add a Room");
                 Console.WriteLine("3. Remove a Room");
-                Console.WriteLine("4. Exit");
-                Console.Write("Choose an option: ");
+                Console.WriteLine("Esc - Exit");
+                Console.Write("\nChoose an option: ");
                 var input = Console.ReadKey().Key;
+                Console.Write("\n");
 
                 switch (input)
                 {
                     case ConsoleKey.D1:
                         Console.Clear();
-                        var rooms = await roomService.GetAvailableRoomsAsync();
+                        var rooms = await roomService.GetAvailableRoomsAsync(null);
                         foreach (var room in rooms)
                             Console.WriteLine($"Room {room.Id}");
                         break;
                     case ConsoleKey.D2:
-                        Console.Write("Enter Room ID to Book: ");
-                        int.TryParse(Console.ReadLine(), out int roomId);
+                        Console.Write("Enter Room ID to add: ");
+                        int.TryParse(Console.ReadLine(), out int addRoomId);
 
-                        Console.Write("Enter date (DD/MM/YYYY): ");
-                        DateOnly.TryParse(Console.ReadLine(), out DateOnly date);
+                        var newRoom = new RoomDTO() { Id = addRoomId };
 
-                        bool booked = await roomService.BookRoomAsync(roomId, date);
-                        Console.WriteLine(booked ? "Room booked successfully!" : "Booking failed!");
+                        bool created = await roomService.AddRoomAsync(newRoom);
+                        Console.WriteLine(created ? "Room created successfully!" : "Creating failed!");
                         break;
-                    case ConsoleKey.D4:
+                    case ConsoleKey.D3:
+                        Console.Write("Enter Room ID to remove: ");
+                        int.TryParse(Console.ReadLine(), out int removeRoomId);
+
+                        bool removed = await roomService.RemoveRoomAsync(removeRoomId);
+                        Console.WriteLine(removed ? "Room removed successfully!" : "Removing failed!");
+                        break;
+                    case ConsoleKey.Escape:
                         Console.Clear();
                         return;
                     default:
@@ -91,28 +102,43 @@ namespace booking_imitation_n_layer.Presentation
             {
                 Console.Clear();
                 Console.WriteLine("Booking.room");
-                Console.WriteLine("1. Show Available Rooms");
+                Console.WriteLine("1. Show Available Rooms on date");
                 Console.WriteLine("2. Book a Room");
-                Console.WriteLine("3. Exit");
-                Console.Write("Choose an option: ");
+                Console.WriteLine("3. Edit book");
+                Console.WriteLine("Esc - Exit");
+                Console.Write("\nChoose an option: ");
                 var input = Console.ReadKey().Key;
+                Console.Write("\n");
 
                 switch (input)
                 {
                     case ConsoleKey.D1:
-                        var rooms = await roomService.GetAvailableRoomsAsync();
+                        Console.WriteLine("Enter date (DD/MM/YYYY): ");
+                        DateOnly.TryParse(Console.ReadLine(), out DateOnly avaluableOnDate);
+                        var rooms = await roomService.GetAvailableRoomsAsync(avaluableOnDate);
                         foreach (var room in rooms)
                             Console.WriteLine($"Room {room.Id}");
                         break;
                     case ConsoleKey.D2:
-                        Console.Write("Enter Room ID to Book: ");
+                        Console.WriteLine("Enter Room ID to Book: ");
                         int.TryParse(Console.ReadLine(), out int roomId);
-                        Console.Write("Enter date (DD/MM/YYYY): ");
+                        Console.WriteLine("Enter date (DD/MM/YYYY): ");
                         DateOnly.TryParse(Console.ReadLine(), out DateOnly date);
                         bool booked = await roomService.BookRoomAsync(roomId, date);
                         Console.WriteLine(booked ? "Room booked successfully!" : "Booking failed!");
                         break;
                     case ConsoleKey.D3:
+                        Console.Write("Enter Room ID to edit: ");
+                        int.TryParse(Console.ReadLine(), out int roomToEditId);
+                        var roomToEdit = await roomService.GetRoomAsync(roomToEditId);
+                        Console.WriteLine($"Room book date: {roomToEdit.BookedDates[0]}");
+                        Console.WriteLine("Enter new book date: ");
+                        DateOnly.TryParse(Console.ReadLine(), out DateOnly newBookDate);
+                        roomToEdit.BookedDates[0] = newBookDate;
+                        bool isSavedEdit = await roomService.SaveRoomAsync(roomToEdit);
+                        Console.WriteLine(isSavedEdit ? "Room change saved successfully!" : "Saving failed failed!");
+                        break;
+                    case ConsoleKey.Escape:
                         Console.Clear();
                         return;
                     default:
@@ -123,6 +149,5 @@ namespace booking_imitation_n_layer.Presentation
                 Console.ReadKey();
             }
         }
-
     }
 }
