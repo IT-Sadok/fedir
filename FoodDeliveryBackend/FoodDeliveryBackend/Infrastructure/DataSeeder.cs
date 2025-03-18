@@ -16,23 +16,19 @@ namespace FoodDeliveryBackend.Persistence
 
             await dbContext.Database.MigrateAsync();
 
-            if (await dbContext.Users.AnyAsync() || await dbContext.Roles.AnyAsync() || await dbContext.Restaurants.AnyAsync())
+            if (await dbContext.Users.AnyAsync() || await dbContext.Restaurants.AnyAsync())
             {
                 return;
-            }
-
-            string[] roles = { "Customer", "RestaurantOwner", "Courier", "Admin" };
-            foreach (var role in roles)
-            {
-                if (!await roleManager.RoleExistsAsync(role))
-                    await roleManager.CreateAsync(new IdentityRole(role));
             }
 
             var users = new List<ApplicationUser>
             {
                 new ApplicationUser { UserName = "admin@example.com", Email = "admin@example.com", FullName = "Admin User" },
                 new ApplicationUser { UserName = "customer@example.com", Email = "customer@example.com", FullName = "Regular Customer" },
-                new ApplicationUser { UserName = "owner@example.com", Email = "owner@example.com", FullName = "Restaurant Owner" },
+                new ApplicationUser { UserName = "owner1@example.com", Email = "owner1@example.com", FullName = "Restaurant Owner" },
+                new ApplicationUser { UserName = "owner2@example.com", Email = "owner2@example.com", FullName = "Restaurant Owner" },
+                new ApplicationUser { UserName = "owner3@example.com", Email = "owner3@example.com", FullName = "Restaurant Owner" },
+                new ApplicationUser { UserName = "owner4@example.com", Email = "owner4@example.com", FullName = "Restaurant Owner" },
                 new ApplicationUser { UserName = "courier@example.com", Email = "courier@example.com", FullName = "Delivery Courier" }
             };
 
@@ -42,29 +38,47 @@ namespace FoodDeliveryBackend.Persistence
                 if (existingUser == null)
                 {
                     await userManager.CreateAsync(user, "Test@123");
-                    await userManager.AddToRoleAsync(user, roles[users.IndexOf(user)]);
+
+                    switch (user.FullName)
+                    {
+                        case "Admin User":
+                            await userManager.AddToRoleAsync(user, "Admin");
+                            break;
+                        case "Regular Customer":
+                            await userManager.AddToRoleAsync(user, "Customer");
+                            break;
+                        case "Restaurant Owner":
+                            await userManager.AddToRoleAsync(user, "RestaurantOwner");
+                            break;
+                        case "Delivery Courier":
+                            await userManager.AddToRoleAsync(user, "Courier");
+                            break;
+                    }
                 }
             }
 
-            var ownerUser = await userManager.FindByEmailAsync("owner@example.com");
+            var ownerUser1 = await userManager.FindByEmailAsync("owner1@example.com");
+            var ownerUser2 = await userManager.FindByEmailAsync("owner2@example.com");
+            var ownerUser3 = await userManager.FindByEmailAsync("owner3@example.com");
+            var ownerUser4 = await userManager.FindByEmailAsync("owner4@example.com");
 
-            // ✅ Seed Restaurants
+            // Seed Restaurants
             var restaurants = new List<Restaurant>
             {
-                new Restaurant { Name = "Sushi Express", Address = "123 Ocean Ave", OwnerId = ownerUser.Id },
-                new Restaurant { Name = "Pizza Heaven", Address = "456 Main St", OwnerId = ownerUser.Id },
-                new Restaurant { Name = "Kebab House", Address = "789 Market St", OwnerId = ownerUser.Id },
-                new Restaurant { Name = "Ukrainian Delights", Address = "101 Kyiv Ave", OwnerId = ownerUser.Id }
+                new Restaurant { Name = "Sushi Express", Address = "123 Ocean Ave", OwnerId = ownerUser1.Id },
+                new Restaurant { Name = "Pizza Heaven", Address = "456 Main St", OwnerId = ownerUser2.Id },
+                new Restaurant { Name = "Kebab House", Address = "789 Market St", OwnerId = ownerUser3.Id },
+                new Restaurant { Name = "Ukrainian Delights", Address = "101 Kyiv Ave", OwnerId = ownerUser4.Id }
             };
             await dbContext.Restaurants.AddRangeAsync(restaurants);
             await dbContext.SaveChangesAsync();
 
-            // ✅ Seed Menus
+            // Seed Menus
             var menus = restaurants.Select(r => new Menu { Name = $"{r.Name} Menu", RestaurantId = r.Id }).ToList();
             await dbContext.Menus.AddRangeAsync(menus);
             await dbContext.SaveChangesAsync();
 
-            // ✅ Seed Dishes
+            // Seed Dishes
             var dishes = new List<Dish>
             {
                 // Sushi Restaurant Dishes
