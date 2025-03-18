@@ -7,9 +7,9 @@ using System.Reflection.Emit;
 
 namespace FoodDeliveryBackend.Persistence
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class FoodDeliveryDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+        public FoodDeliveryDbContext(DbContextOptions<FoodDeliveryDbContext> options) : base(options) { }
 
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<Menu> Menus { get; set; }

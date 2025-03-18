@@ -7,10 +7,14 @@ namespace FoodDeliveryBackend.Persistence
 {
     public static class DatabaseSeeder
     {
+        private const string fullNameAdmin = "Admin User";
+        private const string fullNameCustomer = "Regular Customer";
+        private const string fullNameRestaurantOwner = "Restaurant Owner";
+        private const string fullNameCourier = "Delivery Courier";
         public static async Task SeedDatabaseAsync(IServiceProvider serviceProvider)
         {
             using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<FoodDeliveryDbContext>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
@@ -23,13 +27,13 @@ namespace FoodDeliveryBackend.Persistence
 
             var users = new List<ApplicationUser>
             {
-                new ApplicationUser { UserName = "admin@example.com", Email = "admin@example.com", FullName = "Admin User" },
-                new ApplicationUser { UserName = "customer@example.com", Email = "customer@example.com", FullName = "Regular Customer" },
-                new ApplicationUser { UserName = "owner1@example.com", Email = "owner1@example.com", FullName = "Restaurant Owner" },
-                new ApplicationUser { UserName = "owner2@example.com", Email = "owner2@example.com", FullName = "Restaurant Owner" },
-                new ApplicationUser { UserName = "owner3@example.com", Email = "owner3@example.com", FullName = "Restaurant Owner" },
-                new ApplicationUser { UserName = "owner4@example.com", Email = "owner4@example.com", FullName = "Restaurant Owner" },
-                new ApplicationUser { UserName = "courier@example.com", Email = "courier@example.com", FullName = "Delivery Courier" }
+                new ApplicationUser { UserName = "admin@example.com", Email = "admin@example.com", FullName = fullNameAdmin },
+                new ApplicationUser { UserName = "customer@example.com", Email = "customer@example.com", FullName = fullNameCustomer },
+                new ApplicationUser { UserName = "owner1@example.com", Email = "owner1@example.com", FullName = fullNameRestaurantOwner },
+                new ApplicationUser { UserName = "owner2@example.com", Email = "owner2@example.com", FullName = fullNameRestaurantOwner },
+                new ApplicationUser { UserName = "owner3@example.com", Email = "owner3@example.com", FullName = fullNameRestaurantOwner },
+                new ApplicationUser { UserName = "owner4@example.com", Email = "owner4@example.com", FullName = fullNameRestaurantOwner },
+                new ApplicationUser { UserName = "courier@example.com", Email = "courier@example.com", FullName = fullNameCourier }
             };
 
             foreach (var user in users)
@@ -41,16 +45,16 @@ namespace FoodDeliveryBackend.Persistence
 
                     switch (user.FullName)
                     {
-                        case "Admin User":
+                        case fullNameAdmin:
                             await userManager.AddToRoleAsync(user, "Admin");
                             break;
-                        case "Regular Customer":
+                        case fullNameCustomer:
                             await userManager.AddToRoleAsync(user, "Customer");
                             break;
-                        case "Restaurant Owner":
+                        case fullNameRestaurantOwner:
                             await userManager.AddToRoleAsync(user, "RestaurantOwner");
                             break;
-                        case "Delivery Courier":
+                        case fullNameCourier:
                             await userManager.AddToRoleAsync(user, "Courier");
                             break;
                     }
