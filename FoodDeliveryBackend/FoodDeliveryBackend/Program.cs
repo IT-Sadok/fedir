@@ -1,3 +1,5 @@
+using FoodDeliveryBackend.Application.Services;
+using FoodDeliveryBackend.Application.Services.Interfaces;
 using FoodDeliveryBackend.Identity;
 using FoodDeliveryBackend.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,13 +11,15 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure database
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<FoodDeliveryDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Configure Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddEntityFrameworkStores<FoodDeliveryDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Configure JWT Authentication
 var key = Encoding.UTF8.GetBytes("Jwt:Secret");

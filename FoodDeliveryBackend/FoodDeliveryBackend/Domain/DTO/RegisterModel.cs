@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FoodDeliveryBackend.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace FoodDeliveryBackend.Domain.DTO
 {
@@ -6,6 +7,7 @@ namespace FoodDeliveryBackend.Domain.DTO
     {
         [Required] public string FullName { get; set; }
         [Required][EmailAddress] public string Email { get; set; }
+        [Required] public string Role { get; set; }
         [Required][MinLength(6)] public string Password { get; set; }
     }
 }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FoodDeliveryBackend.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(FoodDeliveryDbContext))]
     [Migration("20250225134815_AddedBasicEntities")]
     partial class AddedBasicEntities
     {
