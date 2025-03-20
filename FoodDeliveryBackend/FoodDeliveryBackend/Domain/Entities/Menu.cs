@@ -6,13 +6,13 @@ namespace FoodDeliveryBackend.Domain.Entities
     public class Menu
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        public int RestaurantId { get; set; }
+        public string RestaurantId { get; set; }
 
         [ForeignKey("RestaurantId")]
         public Restaurant? Restaurant { get; set; }

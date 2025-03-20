@@ -1,5 +1,6 @@
-﻿using FoodDeliveryBackend.Application.Services.Interfaces;
+﻿using FoodDeliveryBackend.Application.Services.CQRS;
 using FoodDeliveryBackend.Domain.DTO;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,28 +10,28 @@ namespace FoodDeliveryBackend.Controllers
     [ApiController]
     public class RestaurantController : Controller
     {
-        private readonly IRestaurantService _restaurantService;
-        public RestaurantController(IRestaurantService restaurantService) { _restaurantService = restaurantService; }
+        private readonly IMediator _mediator;
+        public RestaurantController(IMediator mediator) { _mediator = mediator; }
 
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetAllRestaurants()
         {
-            return Ok(await _restaurantService.GetAllRestaurantsAsync());
+            return Ok(await _mediator.Send(new GetAllRestaurantsQuery()));
         }
 
         [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> GetRestaurantById(int id)
         {
-            return Ok(await _restaurantService.GetRestaurantByIdAsync(id));
+            return Ok(await _mediator.Send(new GetRestaurantByIdQuery(id)));
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin,RestaurantOwner")]
         public async Task<IActionResult> CreateRestaurant([FromBody] RestaurantDto restaurantDto)
         {
-            await _restaurantService.CreateRestaurantAsync(restaurantDto);
+            await _mediator.Send(new CreateRestaurantCommand(restaurantDto));
             return Ok();
         }
 
@@ -38,7 +39,7 @@ namespace FoodDeliveryBackend.Controllers
         [Authorize(Roles = "Admin,RestaurantOwner")]
         public async Task<IActionResult> UpdateRestaurant(int id, [FromBody] RestaurantDto restaurantDto)
         {
-            await _restaurantService.UpdateRestaurantAsync(id, restaurantDto);
+            await _mediator.Send(new UpdateRestaurantCommand(id, restaurantDto));
             return Ok();
         }
 
@@ -46,7 +47,7 @@ namespace FoodDeliveryBackend.Controllers
         [Authorize(Roles = "Admin,RestaurantOwner")]
         public async Task<IActionResult> DeleteRestaurant(int id)
         {
-            await _restaurantService.DeleteRestaurantAsync(id);
+            await _mediator.Send(new DeleteRestaurantCommand(id));
             return Ok();
         }
     }

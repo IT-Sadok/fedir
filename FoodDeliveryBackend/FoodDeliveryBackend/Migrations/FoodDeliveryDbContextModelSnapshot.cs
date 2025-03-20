@@ -4,7 +4,6 @@ using FoodDeliveryBackend.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,11 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodDeliveryBackend.Migrations
 {
     [DbContext(typeof(FoodDeliveryDbContext))]
-    [Migration("20250222173002_InitialCreate")]
-    partial class InitialCreate
+    partial class FoodDeliveryDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,6 +21,74 @@ namespace FoodDeliveryBackend.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("FoodDeliveryBackend.Domain.Entities.Dish", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("MenuId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MenuId");
+
+                    b.ToTable("Dishes");
+                });
+
+            modelBuilder.Entity("FoodDeliveryBackend.Domain.Entities.Menu", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RestaurantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RestaurantId")
+                        .IsUnique();
+
+                    b.ToTable("Menus");
+                });
+
+            modelBuilder.Entity("FoodDeliveryBackend.Domain.Entities.Restaurant", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Restaurants");
+                });
 
             modelBuilder.Entity("FoodDeliveryBackend.Identity.ApplicationUser", b =>
                 {
@@ -123,25 +188,25 @@ namespace FoodDeliveryBackend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "37ae25af-a19b-45e4-b33f-dcb6591c405b",
+                            Id = "ae68b4a8-210c-4b61-9e38-9a6e9c17a59c",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "16ed6fdd-635e-4587-8441-57100e238b94",
+                            Id = "bdbf89a9-cc70-44b1-b396-cb2b93d923ec",
                             Name = "RestaurantOwner",
                             NormalizedName = "RESTAURANTOWNER"
                         },
                         new
                         {
-                            Id = "6ea9840e-212c-4277-a88d-1194d926b12d",
+                            Id = "3c4d5556-005c-423d-b17b-1b9c12534bf8",
                             Name = "Courier",
                             NormalizedName = "COURIER"
                         },
                         new
                         {
-                            Id = "0d5b3560-bda0-450a-bd8b-25dff49da47a",
+                            Id = "a6b75b2f-44ed-46b4-9afd-5a3517c69b0f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -253,6 +318,39 @@ namespace FoodDeliveryBackend.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("FoodDeliveryBackend.Domain.Entities.Dish", b =>
+                {
+                    b.HasOne("FoodDeliveryBackend.Domain.Entities.Menu", "Menu")
+                        .WithMany("Dishes")
+                        .HasForeignKey("MenuId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Menu");
+                });
+
+            modelBuilder.Entity("FoodDeliveryBackend.Domain.Entities.Menu", b =>
+                {
+                    b.HasOne("FoodDeliveryBackend.Domain.Entities.Restaurant", "Restaurant")
+                        .WithOne("Menu")
+                        .HasForeignKey("FoodDeliveryBackend.Domain.Entities.Menu", "RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Restaurant");
+                });
+
+            modelBuilder.Entity("FoodDeliveryBackend.Domain.Entities.Restaurant", b =>
+                {
+                    b.HasOne("FoodDeliveryBackend.Identity.ApplicationUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -302,6 +400,16 @@ namespace FoodDeliveryBackend.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("FoodDeliveryBackend.Domain.Entities.Menu", b =>
+                {
+                    b.Navigation("Dishes");
+                });
+
+            modelBuilder.Entity("FoodDeliveryBackend.Domain.Entities.Restaurant", b =>
+                {
+                    b.Navigation("Menu");
                 });
 #pragma warning restore 612, 618
         }

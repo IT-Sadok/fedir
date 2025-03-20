@@ -1,12 +1,6 @@
-﻿using FoodDeliveryBackend.Identity;
-using FoodDeliveryBackend.Domain.DTO;
-using Microsoft.AspNetCore.Identity;
+﻿using FoodDeliveryBackend.Domain.DTO;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using FoodDeliveryBackend.Application.Services.Interfaces;
 
 namespace FoodDeliveryBackend.Controllers

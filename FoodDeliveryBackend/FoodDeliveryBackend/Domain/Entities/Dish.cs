@@ -6,7 +6,7 @@ namespace FoodDeliveryBackend.Domain.Entities
     public class Dish
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public string Name { get; set; } = string.Empty;
@@ -16,7 +16,7 @@ namespace FoodDeliveryBackend.Domain.Entities
         public decimal Price { get; set; }
 
         [Required]
-        public int MenuId { get; set; }
+        public string MenuId { get; set; }
 
         [ForeignKey("MenuId")]
         public Menu? Menu { get; set; }

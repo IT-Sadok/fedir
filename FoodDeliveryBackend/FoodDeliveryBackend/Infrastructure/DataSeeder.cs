@@ -61,6 +61,8 @@ namespace FoodDeliveryBackend.Persistence
                 }
             }
 
+            await dbContext.SaveChangesAsync();
+
             var ownerUser1 = await userManager.FindByEmailAsync("owner1@example.com");
             var ownerUser2 = await userManager.FindByEmailAsync("owner2@example.com");
             var ownerUser3 = await userManager.FindByEmailAsync("owner3@example.com");
