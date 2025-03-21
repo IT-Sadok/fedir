@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using MediatR;
-using FoodDeliveryBackend.Application.Services.CQRS;
 using FoodDeliveryBackend.Domain.DTO;
+using FoodDeliveryBackend.Application.CQRS.Queries;
+using FoodDeliveryBackend.Application.CQRS.Commands;
 
 namespace FoodDeliveryBackend.Controllers
 {

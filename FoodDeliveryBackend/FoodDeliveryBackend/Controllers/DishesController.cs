@@ -1,4 +1,5 @@
-﻿using FoodDeliveryBackend.CQRS.Restaurants;
+﻿using FoodDeliveryBackend.Application.CQRS.Commands;
+using FoodDeliveryBackend.Application.CQRS.Queries;
 using FoodDeliveryBackend.Domain.DTO;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
