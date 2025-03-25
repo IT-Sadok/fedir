@@ -1,4 +1,5 @@
-﻿using FoodDeliveryBackend.Application.CQRS.Commands;
+﻿using AutoMapper;
+using FoodDeliveryBackend.Application.CQRS.Commands;
 using FoodDeliveryBackend.Application.CQRS.Queries;
 using FoodDeliveryBackend.Domain.DTO;
 using FoodDeliveryBackend.Domain.Entities;
@@ -13,12 +14,17 @@ namespace FoodDeliveryBackend.Application.CQRS.Handlers.Menus
         IRequestHandler<GetMenuByIdQuery, MenuDto?>
     {
         private readonly FoodDeliveryDbContext _context;
-        public GetMenuByIdHandler(FoodDeliveryDbContext context) { _context = context; }
+        private readonly IMapper _mapper;
+        public GetMenuByIdHandler(FoodDeliveryDbContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
 
         public async Task<MenuDto?> Handle(GetMenuByIdQuery request, CancellationToken cancellationToken)
         {
             var menu = await _context.Menus.FindAsync(request.Id);
-            return menu == null ? null : new MenuDto { Id = menu.Id, RestaurantId = menu.RestaurantId };
+            return _mapper.Map<MenuDto>(menu);
         }
     }
 }
