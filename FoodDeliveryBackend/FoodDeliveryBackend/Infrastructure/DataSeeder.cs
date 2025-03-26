@@ -71,16 +71,16 @@ namespace FoodDeliveryBackend.Persistence
             // Seed Restaurants
             var restaurants = new List<Restaurant>
             {
-                new Restaurant { Name = "Sushi Express", Address = "123 Ocean Ave", OwnerId = ownerUser1.Id },
-                new Restaurant { Name = "Pizza Heaven", Address = "456 Main St", OwnerId = ownerUser2.Id },
-                new Restaurant { Name = "Kebab House", Address = "789 Market St", OwnerId = ownerUser3.Id },
-                new Restaurant { Name = "Ukrainian Delights", Address = "101 Kyiv Ave", OwnerId = ownerUser4.Id }
+                new Restaurant { Id = Guid.NewGuid().ToString(), Name = "Sushi Express", Address = "123 Ocean Ave", OwnerId = ownerUser1.Id },
+                new Restaurant { Id = Guid.NewGuid().ToString(),  Name = "Pizza Heaven", Address = "456 Main St", OwnerId = ownerUser2.Id },
+                new Restaurant { Id = Guid.NewGuid().ToString(),  Name = "Kebab House", Address = "789 Market St", OwnerId = ownerUser3.Id },
+                new Restaurant { Id = Guid.NewGuid().ToString(),  Name = "Ukrainian Delights", Address = "101 Kyiv Ave", OwnerId = ownerUser4.Id }
             };
             await dbContext.Restaurants.AddRangeAsync(restaurants);
             await dbContext.SaveChangesAsync();
 
             // Seed Menus
-            var menus = restaurants.Select(r => new Menu { Name = $"{r.Name} Menu", RestaurantId = r.Id }).ToList();
+            var menus = restaurants.Select(r => new Menu { Id = Guid.NewGuid().ToString(), Name = $"{r.Name} Menu", RestaurantId = r.Id }).ToList();
             await dbContext.Menus.AddRangeAsync(menus);
             await dbContext.SaveChangesAsync();
 
@@ -88,38 +88,38 @@ namespace FoodDeliveryBackend.Persistence
             var dishes = new List<Dish>
             {
                 // Sushi Restaurant Dishes
-                new Dish { Name = "California Roll", Price = 12.99m, MenuId = menus[0].Id },
-                new Dish { Name = "Spicy Tuna Roll", Price = 14.99m, MenuId = menus[0].Id },
-                new Dish { Name = "Salmon Nigiri", Price = 10.99m, MenuId = menus[0].Id },
-                new Dish { Name = "Miso Soup", Price = 5.99m, MenuId = menus[0].Id },
-                new Dish { Name = "Sashimi Platter", Price = 22.99m, MenuId = menus[0].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "California Roll", Price = 12.99m, MenuId = menus[0].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Spicy Tuna Roll", Price = 14.99m, MenuId = menus[0].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Salmon Nigiri", Price = 10.99m, MenuId = menus[0].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Miso Soup", Price = 5.99m, MenuId = menus[0].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Sashimi Platter", Price = 22.99m, MenuId = menus[0].Id },
 
                 // Pizza Restaurant Dishes
-                new Dish { Name = "Pepperoni Pizza", Price = 9.99m, MenuId = menus[1].Id },
-                new Dish { Name = "Margherita Pizza", Price = 8.99m, MenuId = menus[1].Id },
-                new Dish { Name = "BBQ Chicken Pizza", Price = 11.99m, MenuId = menus[1].Id },
-                new Dish { Name = "Vegetarian Pizza", Price = 10.99m, MenuId = menus[1].Id },
-                new Dish { Name = "Cheese Pizza", Price = 7.99m, MenuId = menus[1].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Pepperoni Pizza", Price = 9.99m, MenuId = menus[1].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Margherita Pizza", Price = 8.99m, MenuId = menus[1].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "BBQ Chicken Pizza", Price = 11.99m, MenuId = menus[1].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Vegetarian Pizza", Price = 10.99m, MenuId = menus[1].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Cheese Pizza", Price = 7.99m, MenuId = menus[1].Id },
 
                 // Kebab Restaurant Dishes
-                new Dish { Name = "Chicken Kebab", Price = 9.99m, MenuId = menus[2].Id },
-                new Dish { Name = "Lamb Kebab", Price = 12.99m, MenuId = menus[2].Id },
-                new Dish { Name = "Falafel Wrap", Price = 7.99m, MenuId = menus[2].Id },
-                new Dish { Name = "Shawarma Plate", Price = 14.99m, MenuId = menus[2].Id },
-                new Dish { Name = "Hummus & Pita", Price = 5.99m, MenuId = menus[2].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Chicken Kebab", Price = 9.99m, MenuId = menus[2].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Lamb Kebab", Price = 12.99m, MenuId = menus[2].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Falafel Wrap", Price = 7.99m, MenuId = menus[2].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Shawarma Plate", Price = 14.99m, MenuId = menus[2].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Hummus & Pita", Price = 5.99m, MenuId = menus[2].Id },
 
                 // Ukrainian Food Dishes
-                new Dish { Name = "Borscht", Price = 6.99m, MenuId = menus[3].Id },
-                new Dish { Name = "Varenyky (Dumplings)", Price = 9.99m, MenuId = menus[3].Id },
-                new Dish { Name = "Holubtsi (Stuffed Cabbage)", Price = 10.99m, MenuId = menus[3].Id },
-                new Dish { Name = "Deruny (Potato Pancakes)", Price = 7.99m, MenuId = menus[3].Id },
-                new Dish { Name = "Kutia (Sweet Grain Pudding)", Price = 5.99m, MenuId = menus[3].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Borscht", Price = 6.99m, MenuId = menus[3].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Varenyky (Dumplings)", Price = 9.99m, MenuId = menus[3].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Holubtsi (Stuffed Cabbage)", Price = 10.99m, MenuId = menus[3].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Deruny (Potato Pancakes)", Price = 7.99m, MenuId = menus[3].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Kutia (Sweet Grain Pudding)", Price = 5.99m, MenuId = menus[3].Id },
 
                 // Common Options
-                new Dish { Name = "Coca-Cola", Price = 1.99m, MenuId = menus[0].Id },
-                new Dish { Name = "Coca-Cola", Price = 1.99m, MenuId = menus[1].Id },
-                new Dish { Name = "Coca-Cola", Price = 1.99m, MenuId = menus[2].Id },
-                new Dish { Name = "Coca-Cola", Price = 1.99m, MenuId = menus[3].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Coca-Cola", Price = 1.99m, MenuId = menus[0].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Coca-Cola", Price = 1.99m, MenuId = menus[1].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Coca-Cola", Price = 1.99m, MenuId = menus[2].Id },
+                new Dish { Id = Guid.NewGuid().ToString(), Name = "Coca-Cola", Price = 1.99m, MenuId = menus[3].Id },
             };
             await dbContext.Dishes.AddRangeAsync(dishes);
             await dbContext.SaveChangesAsync();

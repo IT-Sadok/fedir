@@ -3,5 +3,5 @@ using MediatR;
 
 namespace FoodDeliveryBackend.Application.CQRS.Commands
 {
-    public record DeleteDishCommand(int Id) : IRequest;
+    public record DeleteDishCommand(string Id) : IRequest;
 }

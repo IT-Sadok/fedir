@@ -3,5 +3,5 @@ using MediatR;
 
 namespace FoodDeliveryBackend.Application.CQRS.Queries
 {
-    public record GetMenuByIdQuery(int Id) : IRequest<MenuDto?>;
+    public record GetMenuByIdQuery(string Id) : IRequest<MenuDto?>;
 }

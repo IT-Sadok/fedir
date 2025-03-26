@@ -3,5 +3,5 @@ using MediatR;
 
 namespace FoodDeliveryBackend.Application.CQRS.Commands
 {
-    public record UpdateDishCommand(int Id, DishDto DishDto) : IRequest;
+    public record UpdateDishCommand(string Id, DishDto DishDto) : IRequest;
 }

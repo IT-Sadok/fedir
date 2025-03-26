@@ -1,6 +1,7 @@
 using FoodDeliveryBackend.Application.Services;
 using FoodDeliveryBackend.Application.Services.Interfaces;
 using FoodDeliveryBackend.Identity;
+using FoodDeliveryBackend.MinimalAPI;
 using FoodDeliveryBackend.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -20,6 +21,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
 // Configure JWT Authentication
 var key = Encoding.UTF8.GetBytes("Jwt:Secret");
@@ -59,5 +61,9 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.RegisterRestaurantEndpoints();
+app.RegisterMenusEndpoints();
+app.RegisterDishEndpoints();
 
 app.Run();
