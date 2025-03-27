@@ -9,61 +9,72 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Configure database
-builder.Services.AddDbContext<FoodDeliveryDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// Configure Identity
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<FoodDeliveryDbContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
-
-// Configure JWT Authentication
-var key = Encoding.UTF8.GetBytes("Jwt:Secret");
-builder.Services.AddAuthentication(options =>
+public class Program
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters
+    protected Program()
     {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = false,
-        ValidateAudience = false
-    };
-});
+    }
 
-// Enable controllers
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    public static async Task Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+        // Configure database
+        builder.Services.AddDbContext<FoodDeliveryDbContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-var app = builder.Build();
+        // Configure Identity
+        builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+            .AddEntityFrameworkStores<FoodDeliveryDbContext>()
+            .AddDefaultTokenProviders();
 
-await DatabaseSeeder.SeedDatabaseAsync(app.Services);
+        builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
-// Enable authentication & authorization
-app.UseAuthentication();
-app.UseAuthorization();
+        // Configure JWT Authentication
+        var key = Encoding.UTF8.GetBytes("Jwt:Secret");
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.RequireHttpsMetadata = false;
+            options.SaveToken = true;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+        });
 
-app.MapControllers();
-app.UseSwagger();
-app.UseSwaggerUI();
+        // Enable controllers
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
-app.RegisterRestaurantEndpoints();
-app.RegisterMenusEndpoints();
-app.RegisterDishEndpoints();
+        builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-app.Run();
+        var app = builder.Build();
+
+        await DatabaseSeeder.SeedDatabaseAsync(app.Services);
+
+        // Enable authentication & authorization
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.MapControllers();
+        app.UseSwagger();
+        app.UseSwaggerUI();
+
+        app.RegisterRestaurantEndpoints();
+        app.RegisterMenusEndpoints();
+        app.RegisterDishEndpoints();
+
+        app.Run();
+    }
+}
+
