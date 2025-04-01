@@ -7,7 +7,7 @@ namespace FoodDeliveryBackend.Domain.Entities
     public class Restaurant
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public string Name { get; set; } = string.Empty;

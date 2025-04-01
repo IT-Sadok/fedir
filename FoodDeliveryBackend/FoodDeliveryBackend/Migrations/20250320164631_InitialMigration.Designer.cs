@@ -4,6 +4,7 @@ using FoodDeliveryBackend.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodDeliveryBackend.Migrations
 {
     [DbContext(typeof(FoodDeliveryDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250320164631_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,14 +27,12 @@ namespace FoodDeliveryBackend.Migrations
 
             modelBuilder.Entity("FoodDeliveryBackend.Domain.Entities.Dish", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("MenuId")
-                        .HasColumnType("int");
+                    b.Property<string>("MenuId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -49,18 +50,16 @@ namespace FoodDeliveryBackend.Migrations
 
             modelBuilder.Entity("FoodDeliveryBackend.Domain.Entities.Menu", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RestaurantId")
-                        .HasColumnType("int");
+                    b.Property<string>("RestaurantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -72,11 +71,8 @@ namespace FoodDeliveryBackend.Migrations
 
             modelBuilder.Entity("FoodDeliveryBackend.Domain.Entities.Restaurant", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -195,25 +191,25 @@ namespace FoodDeliveryBackend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "0ac4cba4-13ed-4e06-b50c-3596f09deabb",
+                            Id = "ae68b4a8-210c-4b61-9e38-9a6e9c17a59c",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "c3e723f7-9b01-4607-94f7-44f4a2ba58cc",
+                            Id = "bdbf89a9-cc70-44b1-b396-cb2b93d923ec",
                             Name = "RestaurantOwner",
                             NormalizedName = "RESTAURANTOWNER"
                         },
                         new
                         {
-                            Id = "80e14880-0711-4340-abb1-8820ce4c42a1",
+                            Id = "3c4d5556-005c-423d-b17b-1b9c12534bf8",
                             Name = "Courier",
                             NormalizedName = "COURIER"
                         },
                         new
                         {
-                            Id = "358abe69-bd6c-42b5-a893-ebf009907c7a",
+                            Id = "a6b75b2f-44ed-46b4-9afd-5a3517c69b0f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
